@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.get('/health', async (req, res) => {
-    res.send("Health check: Main API active.");
+    res.send("Health check: Video Stream API active.");
 });
 
 app.post('/', async (req, res) => {
