@@ -19,11 +19,11 @@ const BUCKET_NAME = 'nurenproductions.com';
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get('/health', async (req, res) => {
+app.get('/health', (req, res) => {
     res.send("Health check: Video Stream API active.");
 });
 
-app.post('/', async (req, res) => {
+app.post('/', (req, res) => {
     console.log(req.body);
     res.send(req.body);
 });
@@ -49,21 +49,41 @@ app.get('/stream/:video/thumbnails', async (req, res) => {
         Key: req.params.video,
     };
     let dir = './thumbnails/' + req.params.video;
-    if(!fs.exists(dir)){
-        fs.mkdir(dir);
+    if(!fs.exists(dir, err => { console.log(err) })){
+        fs.mkdir(dir, err => { console.log(err) });
     }
     let stream = S3.getObject(videoParams).createReadStream();
     ffmpeg(stream).takeScreenshots({ count: 3, timemarks: [ '00:00:02.000', '6', '10' ]}, dir)
     .on('end', () => {
         res.send(true);
+    })
+    .on('error', (err) => {
+        console.log(err);
     });
 });
 
 app.get('/stream/:video/get-thumbnails', async (req, res) => {
     let dir = './thumbnails/' + req.params.video;
-    if(!fs.exists(dir)){
-        fs.mkdir(dir);
-    }
+    let data = [];
+    await fs.readdir(dir, (err, filenames) => {
+        if(err){
+            console.log(err);
+        }
+        filenames.forEach(file => {
+              fs.readFile(dir + '/' + file, (err, content) => {
+                if(err){
+                    console.log(err)
+                }
+                let newFile = {
+                    name: file,
+                    pic: content,
+                };
+                data.push(newFile);
+            })
+            
+        });
+        res.send(data);
+    });
 });
 
 app.listen(process.env.PORT || 9000);
