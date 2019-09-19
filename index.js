@@ -2,7 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const AWS = require('aws-sdk');
+const fs = require('fs');
 const ffmpeg = require('fluent-ffmpeg');
+const uuid = require('uuid/v4');
 
 AWS.config.update({
     accessKeyId: process.env.NUREN_S3_IAM,
@@ -46,9 +48,22 @@ app.get('/stream/:video/thumbnails', async (req, res) => {
         Bucket: BUCKET_NAME,
         Key: req.params.video,
     };
+    let dir = './thumbnails/' + req.params.video;
+    if(!fs.exists(dir)){
+        fs.mkdir(dir);
+    }
     let stream = S3.getObject(videoParams).createReadStream();
-    var proc = ffmpeg(stream).takeScreenshots({ count: 3, timemarks: [ '00:00:02.000', '6', '10' ]});
-    console.log(proc);
+    ffmpeg(stream).takeScreenshots({ count: 3, timemarks: [ '00:00:02.000', '6', '10' ]}, dir)
+    .on('end', () => {
+        res.send(true);
+    });
+});
+
+app.get('/stream/:video/get-thumbnails', async (req, res) => {
+    let dir = './thumbnails/' + req.params.video;
+    if(!fs.exists(dir)){
+        fs.mkdir(dir);
+    }
 });
 
 app.listen(process.env.PORT || 9000);
