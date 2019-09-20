@@ -1,5 +1,9 @@
 FROM node:latest
-RUN apk add --no-cache ffmpeg
+RUN add-apt-repository ppa:mc3man/trusty-media \
+    && apt-get update \
+    && apt-get dist-upgrade \
+    && apt-get install -y --no-install-recommends \
+        ffmpeg \ 
 WORKDIR /app
 COPY package.json /app
 RUN npm install
