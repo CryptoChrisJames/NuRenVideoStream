@@ -4,7 +4,6 @@ const cors = require('cors');
 const AWS = require('aws-sdk');
 const fs = require('fs');
 const ffmpeg = require('fluent-ffmpeg');
-const uuid = require('uuid/v4');
 
 AWS.config.update({
     accessKeyId: process.env.NUREN_S3_IAM,
