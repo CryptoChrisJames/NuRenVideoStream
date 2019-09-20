@@ -1,5 +1,5 @@
 FROM node:latest
-RUN apt install ffmpeg
+RUN apt-get install ffmpeg libavcodec-extra-53
 WORKDIR /app
 COPY package.json /app
 RUN npm install
