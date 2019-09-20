@@ -62,28 +62,19 @@ app.get('/stream/:video/thumbnails', async (req, res) => {
     });
 });
 
-app.get('/stream/:video/get-thumbnails', async (req, res) => {
+app.get('/stream/:video/get-thumbnails', (req, res) => {
     let dir = './thumbnails/' + req.params.video;
-    let data = [];
-    await fs.readdir(dir, (err, filenames) => {
-        if(err){
-            console.log(err);
-        }
-        filenames.forEach(file => {
-              fs.readFile(dir + '/' + file, (err, content) => {
-                if(err){
-                    console.log(err)
-                }
-                let newFile = {
-                    name: file,
-                    pic: content,
-                };
-                data.push(newFile);
-            })
-            
-        });
-        res.send(data);
-    });
+    const filenames = fs.readdirSync(dir, (err) => { console.log(err); });
+    let content = fs.readFileSync(dir + '/' + filenames[0], (err) => { console.log(err); });
+    fs.unlinkSync(dir + '/' + filenames[0], (err) => { console.log(err); })
+    res.set('Content-Type', 'image/png');
+    res.send(content);
+});
+
+app.get('/stream/:video/thumbnail-selected', (req, res) => {
+    let dir = './thumbnails/' + req.params.video;
+    fs.rmdirSync(dir);
+    res.send(true);
 });
 
 app.listen(process.env.PORT || 9000);
