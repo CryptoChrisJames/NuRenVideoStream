@@ -1,5 +1,5 @@
 FROM node:latest
-RUN opencoconut/ffmpeg -i http://files.coconut.co.s3.amazonaws.com/test.mp4 -f webm -c:v libvpx -c:a libvorbis - > test.webm
+RUN apk add --no-cache ffmpeg
 WORKDIR /app
 COPY package.json /app
 RUN npm install
