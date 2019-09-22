@@ -58,7 +58,7 @@ app.get('/stream/:video/thumbnails', async (req, res) => {
         const filenames = fs.readdirSync(dir, (err) => { console.log(err); });
         filenames.forEach(file => {
             let content = fs.readFileSync(dir + '/' + file, (err) => { console.log(err); });
-            let contentString = new Buffer(content).toString('base64');
+            let contentString = new Buffer.from(content).toString('base64');
             let imageString = 'data:image/png;base64,' + contentString;
             data.push(imageString);
             fs.unlinkSync(dir + '/' + file, (err) => { console.log(err); })
@@ -68,18 +68,8 @@ app.get('/stream/:video/thumbnails', async (req, res) => {
     })
     .on('error', (err) => {
         console.log(err);
-        res.send(err);
+        res.send(false);
     });
-    fs.rmdirSync(dir);
-});
-
-app.get('/stream/:video/get-thumbnails', (req, res) => {
-    let dir = './thumbnails/' + req.params.video;
-    const filenames = fs.readdirSync(dir, (err) => { console.log(err); });
-    let content = fs.readFileSync(dir + '/' + filenames[0], (err) => { console.log(err); });
-    fs.unlinkSync(dir + '/' + filenames[0], (err) => { console.log(err); })
-    res.set('Content-Type', 'image/png');
-    res.send(content);
 });
 
 app.get('/stream/:video/thumbnail-selected', (req, res) => {
