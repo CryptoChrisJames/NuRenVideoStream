@@ -74,7 +74,9 @@ app.get('/stream/:video/thumbnails', async (req, res) => {
 
 app.get('/stream/:video/thumbnail-selected', (req, res) => {
     let dir = './thumbnails/' + req.params.video;
-    fs.rmdirSync(dir);
+    if(!fs.exists(dir, err => { console.log(err) })){
+        fs.rmdirSync(dir);
+    }
     res.send(true);
 });
 
