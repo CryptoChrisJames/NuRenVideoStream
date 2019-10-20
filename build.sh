@@ -1,5 +1,5 @@
 # Initializing Variables
-_imagetag=nurenstream-"${NODE_ENV}"
+_imagetag=nurenstream:"${NODE_ENV}"
 echo $_imagetag
 
 # Initializing functions
