@@ -81,4 +81,4 @@ app.get('/stream/:video/thumbnail-selected', (req, res) => {
 });
 
 app.listen(process.env.PORT || 80);
-console.log("Video Stream API is running.");
+console.log("Video Stream API is running.", process.env.NODE_ENV);
