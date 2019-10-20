@@ -1,7 +1,7 @@
 # Initializing Variables
 _imagetag=nurenstream
 echo $_imagetag
-echo $NODE_ENV
+
 # Initializing functions
 buildImage()
 {    
