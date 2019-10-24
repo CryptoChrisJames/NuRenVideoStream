@@ -1,21 +1,12 @@
 # Initializing Variables
-_imagetag=nurenstream
+_env=$1
+_imagetag=nurenstream-$_env
 echo $_imagetag
 
 # Initializing functions
 buildImage()
 {    
-    docker build -t "$_imagetag" .
-}
-
-removeOldImage()
-{
-    docker rmi $_imagetag
-}
-
-pruneImages()
-{
-    docker image prune --force
+    docker build  --no-cache --build-args -t "$_imagetag" .
 }
 
 awsLogin()
