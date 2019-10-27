@@ -4,6 +4,16 @@ const cors = require('cors');
 const AWS = require('aws-sdk');
 const fs = require('fs');
 const ffmpeg = require('fluent-ffmpeg');
+const config = require('./config.json');
+
+const env = process.env.PROJECTENV;
+
+const currentENV = () => {
+    if(!env){
+        return 'development';
+    }
+    return env
+}
 
 AWS.config.update({
     accessKeyId: process.env.NUREN_S3_IAM,
@@ -13,7 +23,7 @@ AWS.config.update({
 const S3 = new AWS.S3();
 
 const app = express();
-const BUCKET_NAME = 'nurenproductions.com';
+const BUCKET_NAME = config.env[currentENV()].bucket;
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -80,5 +90,12 @@ app.get('/stream/:video/thumbnail-selected', (req, res) => {
     res.send(true);
 });
 
-app.listen(process.env.PORT || 80);
-console.log("Video Stream API is running.", process.env.PROJECTENV);
+const currentPORT = () => {
+    if(env === 'development' || env === 'dev'){
+        return '8000';
+    }
+    return '80'
+}
+
+app.listen(currentPORT());
+console.log("Video Stream API is running.", process.env.PROJECTENV, BUCKET_NAME);

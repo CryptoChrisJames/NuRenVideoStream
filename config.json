@@ -1,0 +1,13 @@
+{
+    "env" : {        
+        "development" : {
+            "bucket" : "qa.nurenproductions.com"
+        },
+        "qa" : {
+            "bucket" : "qa.nurenproductions.com"
+        },
+        "prod" : {
+            "bucket" : "nurenproductions.com"
+        }
+    }
+}

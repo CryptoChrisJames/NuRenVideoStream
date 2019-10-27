@@ -1,12 +1,12 @@
 # Initializing Variables
 _env=$1
-_imagetag=nurenstream-$_env
+_imagetag=nurenvideostream-$_env
 echo $_imagetag
 
 # Initializing functions
 buildImage()
 {    
-    docker build  --no-cache --build-args -t "$_imagetag" .
+    docker build --no-cache --build-arg PROJECTENV=$_env -t "$_imagetag" .
 }
 
 awsLogin()
@@ -20,20 +20,11 @@ ecrPush()
     docker push 614222560511.dkr.ecr.us-east-2.amazonaws.com/$_imagetag:latest
 }
 
-
-
-pruneImages
-echo $?
-
-if [ "$(docker images $_imagetag)" == "" ]; then
-    echo $?
-    buildImage
-else
-    echo $?
-    removeOldImage
-    buildImage
-fi
+buildImage
 
 awsLogin
 
 ecrPush
+
+
+exit 0
